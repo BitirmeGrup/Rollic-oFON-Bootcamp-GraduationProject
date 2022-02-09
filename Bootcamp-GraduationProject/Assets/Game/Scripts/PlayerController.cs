@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+
+    public static PlayerController Current;
+
+    //--------------------------------------------------------------------------------------------
     [SerializeField] private Transform sideMovementRoot;
     [SerializeField] private Transform leftLimit, rightLimit;
     [SerializeField] private float forwardMovementSpeed = 1f, sideMomentSensitivity = 1f;
@@ -28,9 +32,13 @@ public class PlayerController : MonoBehaviour
             return centimeters;
         }
     }
+//--------------------------------------------------------------------------------------------------
+
+    public GameObject ridingCylinderPrefab;
+    public List<RidingCylinder> cylinders;
     void Start()
     {
-        
+        Current = this;
     }
 
     
@@ -57,6 +65,8 @@ public class PlayerController : MonoBehaviour
         //localPos += Vector3.right * inputDrag.x * sideMomentSensitivity;
         
         localPos.x = Mathf.Lerp(localPos.x, sideMovementTarget, Time.deltaTime * sideMovementLerpSpeed);
+
+
         
 
         sideMovementRoot.localPosition = localPos;
@@ -86,4 +96,59 @@ public class PlayerController : MonoBehaviour
             inputDrag = Vector2.zero;
         }
     }
+
+//-------------------------------------------------------------------------------------------------
+   /* private void OnTriggerenter(Collider other)
+    {
+        Debug.Log(other.tag.ToString());
+        if (other.tag == "AddSteelbar")
+        {
+            IncrementCylinderVolume(0.2f);
+            Destroy(other.gameObject);
+        }
+    }*/
+
+    private void OnTriggerEnter(Collider other) 
+    {
+        Debug.Log(other.tag.ToString());
+        if (other.tag == "AddSteelbar")
+        {
+            IncrementCylinderVolume(0.2f);
+            Destroy(other.gameObject);
+        }
+    }
+    public void IncrementCylinderVolume(float value)
+    {
+        if(cylinders.Count == 0)
+        {
+            if(value > 0)
+            {
+                CreateCylinder(value);
+            }
+            else
+            {
+                //gameover
+            }
+        }
+        else
+        {
+            cylinders[cylinders.Count - 1].IncrementCylinderVolume(value);
+        }
+    }
+
+    public void CreateCylinder(float value)
+    {
+        RidingCylinder createdCylinder = Instantiate(ridingCylinderPrefab, transform).GetComponent<RidingCylinder>();
+        cylinders.Add(createdCylinder);
+        createdCylinder.IncrementCylinderVolume(value);
+        Debug.Log(cylinders.Count);
+    }
+
+    public void DestroyCylinder(RidingCylinder cylinder)
+    {
+        cylinders.Remove(cylinder);
+        Destroy(cylinder.gameObject);
+    }
+
+    
 }
