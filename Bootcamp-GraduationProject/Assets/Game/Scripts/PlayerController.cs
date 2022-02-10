@@ -113,10 +113,27 @@ public class PlayerController : MonoBehaviour
         Debug.Log(other.tag.ToString());
         if (other.tag == "AddSteelbar")
         {
-            IncrementCylinderVolume(0.2f);
+            IncrementCylinderVolume(0.1f);
             Destroy(other.gameObject);
         }
     }
+
+    private void OnTriggerStay(Collider other) 
+    {
+        if(other.tag == "ObstructRoadcone")
+        {
+            IncrementCylinderVolume(-Time.fixedDeltaTime);
+        }    
+        if(other.tag == "ObstructBrick")
+        {
+            IncrementCylinderVolume(-Time.fixedDeltaTime);
+        }
+        if(other.tag == "ObstructBarrier")
+        {
+            IncrementCylinderVolume(-Time.fixedDeltaTime);
+        } 
+    }
+
     public void IncrementCylinderVolume(float value)
     {
         if(cylinders.Count == 0)

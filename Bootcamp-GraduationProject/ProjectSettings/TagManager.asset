@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - AddSteelbar
+  - ObstructRoadcone
+  - ObstructBrick
+  - ObstructBarrier
   layers:
   - Default
   - TransparentFX
