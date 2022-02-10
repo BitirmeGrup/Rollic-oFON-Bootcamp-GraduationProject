@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform sideMovementRoot;
     [SerializeField] private Transform leftLimit, rightLimit;
     [SerializeField] private float forwardMovementSpeed = 1f, sideMomentSensitivity = 1f;
-    [SerializeField] private float characterSpeed = 5f;
+    public float characterSpeed = 5f;
     [SerializeField] private float sideMovementLerpSpeed = 20f;
 
     private Vector2 inputDrag;
@@ -39,11 +39,18 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         Current = this;
+        
     }
 
     
     void Update()
     {
+        /*----------------------------
+        if(LevelController.Current == null || !LevelController.Current.gameActive)
+        {
+            return;
+        }
+        */
         HandleForwardMovement();
         HandleInput();
         HandleSideMovement();
@@ -98,19 +105,11 @@ public class PlayerController : MonoBehaviour
     }
 
 //-------------------------------------------------------------------------------------------------
-   /* private void OnTriggerenter(Collider other)
-    {
-        Debug.Log(other.tag.ToString());
-        if (other.tag == "AddSteelbar")
-        {
-            IncrementCylinderVolume(0.2f);
-            Destroy(other.gameObject);
-        }
-    }*/
+   
 
     private void OnTriggerEnter(Collider other) 
     {
-        Debug.Log(other.tag.ToString());
+        //Debug.Log(other.tag.ToString());
         if (other.tag == "AddSteelbar")
         {
             IncrementCylinderVolume(0.1f);
@@ -158,7 +157,7 @@ public class PlayerController : MonoBehaviour
         RidingCylinder createdCylinder = Instantiate(ridingCylinderPrefab, transform).GetComponent<RidingCylinder>();
         cylinders.Add(createdCylinder);
         createdCylinder.IncrementCylinderVolume(value);
-        Debug.Log(cylinders.Count);
+       // Debug.Log(cylinders.Count);
     }
 
     public void DestroyCylinder(RidingCylinder cylinder)
@@ -167,5 +166,10 @@ public class PlayerController : MonoBehaviour
         Destroy(cylinder.gameObject);
     }
 
-    
+    //--------------------------------------------------------------------------------------------------
+
+    public void ChangeSpeed(float value)
+    {
+        characterSpeed = value;
+    }
 }
