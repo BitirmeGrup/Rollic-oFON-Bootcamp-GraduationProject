@@ -9,6 +9,13 @@ public class LevelController : MonoBehaviour
     public bool gameActive = false;
     public GameObject startMenu, gameMenu, gameOverMenu, finishMenu;
     public Text scoreText, finishScoreText, currentLevelText, nextLevelText;
+    int currentLevel;
+    int score;
+    public Slider levelProgressBar;
+    private float maxDistance,distance;
+    public GameObject finishLine;
+
+    
 
 ///-----------e
     [SerializeField] private GameObject player;
@@ -25,7 +32,7 @@ public class LevelController : MonoBehaviour
     {
         Current = this;
  
-        int currentLevel = PlayerPrefs.GetInt("currentLevel");
+        currentLevel = PlayerPrefs.GetInt("currentLevel");
         if(SceneManager.GetActiveScene().name != "Level "+ currentLevel)
         {
             SceneManager.LoadScene("Level " + currentLevel);
@@ -42,11 +49,42 @@ public class LevelController : MonoBehaviour
     
     void Update()
     {
-        
+        if(gameActive)
+        {
+            PlayerController player = PlayerController.Current;
+            distance = finishLine.transform.position.z - PlayerController.Current.transform.position.z;
+            
+            //levelProgressBar.value += (distance/maxDistance);
+           // Debug.Log("DİSTANCE" + distance);
+           maxDistance = finishLine.transform.position.z - PlayerController.Current.transform.position.z;//uzaklıkları bulmak
+           Debug.Log("MaxDİSTANCE" + maxDistance);
+           StartCoroutine(slideNumeretor());
+        }
     }
+
+
+
+    IEnumerator slideNumeretor()
+    {
+        if(distance > 0)
+        {
+            yield return new WaitForSeconds(1f);
+            levelProgressBar.value += 0.035f;
+            
+        }
+    }
+
+
 
     public void StartLevel()
     {
+
+        if(playercontroller.enabled == true)
+        {
+        maxDistance = finishLine.transform.position.z - PlayerController.Current.transform.position.z;//uzaklıkları bulmak
+        
+        }
+
         playercontroller.enabled = true;
 
         if(playercontroller.enabled == true)
@@ -77,4 +115,35 @@ public class LevelController : MonoBehaviour
         
     }
 
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void LoadNextLevel()
+    {
+        SceneManager.LoadScene("Level " + (currentLevel + 1));
+    }
+
+    public void GameOver()
+    {
+        gameMenu.SetActive(false);
+        gameOverMenu.SetActive(true);
+        gameActive = false;
+    }
+
+    public void FinishGame()
+    {
+        PlayerPrefs.SetInt("currentLevel", currentLevel + 1);
+        finishScoreText.text = score.ToString();
+        gameMenu.SetActive(false);
+        finishMenu.SetActive(true);
+        gameActive = false;
+    }
+
+    public void ChangeScore(int increment)
+    {
+        score += increment;
+        scoreText.text = score.ToString();
+    }
 }

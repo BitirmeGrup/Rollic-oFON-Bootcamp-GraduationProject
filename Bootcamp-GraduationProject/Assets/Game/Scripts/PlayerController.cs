@@ -20,6 +20,9 @@ public class PlayerController : MonoBehaviour
     private float leftLimitX => leftLimit.localPosition.x; 
     private float rightLimitX => rightLimit.localPosition.x;
     private float sideMovementTarget = 0f;
+    //--------ee
+    
+    Vector3 localPos;
 
     private Vector2 mousePositionCM
     {
@@ -67,7 +70,8 @@ public class PlayerController : MonoBehaviour
         sideMovementTarget += inputDrag.x * sideMomentSensitivity;
         sideMovementTarget = Mathf.Clamp(sideMovementTarget, leftLimitX, rightLimitX);
 
-        var localPos = sideMovementRoot.localPosition;
+        // asıl olan var localPos = sideMovementRoot.localPosition;
+        localPos = sideMovementRoot.localPosition;
 
         //localPos += Vector3.right * inputDrag.x * sideMomentSensitivity;
         
@@ -77,6 +81,17 @@ public class PlayerController : MonoBehaviour
         
 
         sideMovementRoot.localPosition = localPos;
+
+        //----e------
+        if(cylinders.Count >= 0)
+        {
+            for(int i = 0; i<cylinders.Count; i++)
+            {
+            var localPosCylider1 = cylinders[i].gameObject.transform.localPosition;
+            localPosCylider1.x = Mathf.Lerp(localPos.x+ 1.5f, sideMovementTarget, Time.deltaTime * sideMovementLerpSpeed);
+            cylinders[i].transform.localPosition = localPosCylider1;
+            }
+        }
 
         /*var moveDirection = Vector3.forward * forwardMovementSpeed * Time.deltaTime;
         moveDirection += sideMovementRoot.right * inputDrag.x * sideMomentSensitivity;
