@@ -12,7 +12,7 @@ public class LevelController : MonoBehaviour
     int currentLevel;
     int score;
     public Slider levelProgressBar;
-    private float maxDistance,distance;
+    private float maxDistance,distance,finishZ;
     public GameObject finishLine;
 
     
@@ -31,7 +31,10 @@ public class LevelController : MonoBehaviour
     void Start()
     {
         Current = this;
- 
+
+        // about finish line
+        finishZ = finishLine.transform.position.z;
+
         currentLevel = PlayerPrefs.GetInt("currentLevel");
         if(SceneManager.GetActiveScene().name != "Level "+ currentLevel)
         {
@@ -47,31 +50,25 @@ public class LevelController : MonoBehaviour
     }
 
     
-    void Update()
+    void FixedUpdate()
     {
         if(gameActive)
         {
-            distance = finishLine.transform.position.z - player.transform.position.z;
-            
-            //levelProgressBar.value += (distance/maxDistance);
-           // Debug.Log("DİSTANCE" + distance);  
-           maxDistance = finishLine.transform.position.z - player.transform.position.z; //uzaklıkları bulmak
-           // Debug.Log("MaxDİSTANCE" + maxDistance);
-           StartCoroutine(slideNumeretor());
+            levelProgressBar.value = (((PlayerController.current.transform.position.z)/finishZ)*100);
         }
     }
 
 
 
-    IEnumerator slideNumeretor()
-    {
-        if(distance > 0)
-        {
-            yield return new WaitForSeconds(1f);
-            levelProgressBar.value += 0.035f;
+    //IEnumerator slideNumeretor()
+    //{
+    //    if(distance > 0)
+    //    {
+    //        yield return new WaitForSeconds(1f);
+    //        levelProgressBar.value += 0.035f;
             
-        }
-    }
+    //    }
+    //}
 
 
 
