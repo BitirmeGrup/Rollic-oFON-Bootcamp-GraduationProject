@@ -51,13 +51,13 @@ public class LevelController : MonoBehaviour
     {
         if(gameActive)
         {
-            PlayerController player = PlayerController.Current;
-            distance = finishLine.transform.position.z - PlayerController.Current.transform.position.z;
+            PlayerController player = PlayerController.current;
+            distance = finishLine.transform.position.z - PlayerController.current.transform.position.z;
             
             //levelProgressBar.value += (distance/maxDistance);
            // Debug.Log("DİSTANCE" + distance);
-           maxDistance = finishLine.transform.position.z - PlayerController.Current.transform.position.z;//uzaklıkları bulmak
-           Debug.Log("MaxDİSTANCE" + maxDistance);
+           maxDistance = finishLine.transform.position.z - PlayerController.current.transform.position.z;//uzaklıkları bulmak
+           // Debug.Log("MaxDİSTANCE" + maxDistance);
            StartCoroutine(slideNumeretor());
         }
     }
@@ -81,7 +81,7 @@ public class LevelController : MonoBehaviour
 
         if(playercontroller.enabled == true)
         {
-        maxDistance = finishLine.transform.position.z - PlayerController.Current.transform.position.z;//uzaklıkları bulmak
+        maxDistance = finishLine.transform.position.z - PlayerController.current.transform.position.z;//uzaklıkları bulmak
         
         }
 

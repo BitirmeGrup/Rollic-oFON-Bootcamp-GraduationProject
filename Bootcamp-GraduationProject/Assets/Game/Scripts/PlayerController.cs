@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    public static PlayerController Current;
+    public static PlayerController current;
 
     //--------------------------------------------------------------------------------------------
     [SerializeField] private Transform sideMovementRoot;
@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private float rightLimitX => rightLimit.localPosition.x;
     private float sideMovementTarget = 0f;
     //--------ee
-    
+
     Vector3 localPos;
 
     private Vector2 mousePositionCM
@@ -38,10 +38,10 @@ public class PlayerController : MonoBehaviour
 //--------------------------------------------------------------------------------------------------
 
     public GameObject ridingCylinderPrefab;
-    public List<RidingCylinder> cylinders;
+    public List<GameObject> cylinders;
     void Start()
     {
-        Current = this;
+        current = this;
         
     }
 
@@ -57,6 +57,8 @@ public class PlayerController : MonoBehaviour
         HandleForwardMovement();
         HandleInput();
         HandleSideMovement();
+
+        AllignCylinderWithPlayer();
     }
 
     private void HandleForwardMovement()
@@ -74,24 +76,24 @@ public class PlayerController : MonoBehaviour
         localPos = sideMovementRoot.localPosition;
 
         //localPos += Vector3.right * inputDrag.x * sideMomentSensitivity;
-        
+
         localPos.x = Mathf.Lerp(localPos.x, sideMovementTarget, Time.deltaTime * sideMovementLerpSpeed);
 
 
-        
+
 
         sideMovementRoot.localPosition = localPos;
 
-        //----e------
-        if(cylinders.Count >= 0)
-        {
-            for(int i = 0; i<cylinders.Count; i++)
-            {
-            var localPosCylider1 = cylinders[i].gameObject.transform.localPosition;
-            localPosCylider1.x = Mathf.Lerp(localPos.x+ 1.5f, sideMovementTarget, Time.deltaTime * sideMovementLerpSpeed);
-            cylinders[i].transform.localPosition = localPosCylider1;
-            }
-        }
+        ////----e------
+        //if(cylinders.Count >= 0)
+        //{
+        //    for(int i = 0; i<cylinders.Count; i++)
+        //    {
+        //    var localPosCylider1 = cylinders[i].gameObject.transform.localPosition;
+        //    localPosCylider1.x = Mathf.Lerp(localPos.x+ 1.5f, sideMovementTarget, Time.deltaTime * sideMovementLerpSpeed);
+        //    cylinders[i].transform.localPosition = localPosCylider1;
+        //    }
+        //}
 
         /*var moveDirection = Vector3.forward * forwardMovementSpeed * Time.deltaTime;
         moveDirection += sideMovementRoot.right * inputDrag.x * sideMomentSensitivity;
@@ -163,19 +165,34 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            cylinders[cylinders.Count - 1].IncrementCylinderVolume(value);
+            cylinders[cylinders.Count - 1].GetComponent<RidingCylinder>().IncrementCylinderVolume(value);
         }
     }
 
+    public void AllignCylinderWithPlayer()
+    {
+        foreach (GameObject cylinder in cylinders)
+        {
+
+            float xOfCylinder = sideMovementRoot.position.x;
+            float yOfCylinder = cylinder.transform.position.y;
+            float zOfCylinder = cylinder.transform.position.z;
+
+
+            cylinder.transform.position = new Vector3(xOfCylinder, yOfCylinder, zOfCylinder);
+        }
+    }
+
+
     public void CreateCylinder(float value)
     {
-        RidingCylinder createdCylinder = Instantiate(ridingCylinderPrefab, transform).GetComponent<RidingCylinder>();
+        GameObject createdCylinder = Instantiate(ridingCylinderPrefab, transform);
         cylinders.Add(createdCylinder);
-        createdCylinder.IncrementCylinderVolume(value);
+        createdCylinder.GetComponent<RidingCylinder>().IncrementCylinderVolume(value);
        // Debug.Log(cylinders.Count);
     }
 
-    public void DestroyCylinder(RidingCylinder cylinder)
+    public void DestroyCylinder(GameObject cylinder)
     {
         cylinders.Remove(cylinder);
         Destroy(cylinder.gameObject);
