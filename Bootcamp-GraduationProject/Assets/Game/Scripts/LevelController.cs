@@ -16,8 +16,6 @@ public class LevelController : MonoBehaviour
     public GameObject finishLine;
 
     
-
-    ///-----------e
     [SerializeField] private GameObject player;
     PlayerController playercontroller ;
 
