@@ -35,10 +35,11 @@ public class PlayerController : MonoBehaviour
             return centimeters;
         }
     }
-//--------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------
 
     public GameObject ridingCylinderPrefab;
     public List<GameObject> cylinders;
+    public static int scoreNew;
     void Start()
     {
         current = this;
@@ -204,4 +205,6 @@ public class PlayerController : MonoBehaviour
     {
         characterSpeed = value;
     }
+
+    
 }
